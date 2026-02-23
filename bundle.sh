@@ -1,33 +1,44 @@
-mkdir -p .bundle/
+#!/usr/bin/env node
 
-cd .bundle
-mkdir resources
-cp -a ../controllers/ controllers
-cp -a ../definitions/ definitions
-cp -a ../modules/ modules
-cp -a ../schemas/ schemas
-cp -a ../public/ public
-cp -a ../views/ views
-cp -a ../resources/default.resource resources/default.resource
-cp -a ../updates/ updates
-cp -a ../guest.json guest.json
-mv controllers/api.js controllers/op-api.js
-mv controllers/default.js controllers/op-default.js
+require('total5');
 
-# Flat file database
-# mv definitions/database-bk.js definitions/database.js
+var path = '--bundles--';
 
-cd definitions
-for f in *.js; do mv "$f" "`echo op-$f`"; done
+function buildplugin(name, callback) {
+	console.log('| |--', name + '.bundle');
+	Total.backup(path + '/' + name + '.bundle', PATH.root(), callback, function(path, isdir) {
+		return path === '/' || path === '/plugins/' || (path.indexOf('plugins/' + name) !== -1);
+	});
+}
 
-cd ../schemas
-for f in *.js; do mv "$f" "`echo op-$f`"; done
+console.log('|-- Total.js bundle compiler');
+console.time('|-- Compilation');
 
-cd ..
+console.log('| |--', 'app.bundle');
+Total.backup(path + '/app.bundle', PATH.root(), function() {
+	F.Fs.readdir(PATH.root('plugins'), function(err, response) {
+		response.wait(function(key, next) {
+			buildplugin(key, next);
+		}, function() {
+			console.timeEnd('|-- Compilation');
+		});
+	});
+}, function(path, isdir) {
 
-total4 --bundle ../openplatform.bundle
-# cp openplatform.package ../openplatform@4.bundle
+	if (!isdir)
+		return path.split('/').length > 2;
 
-cd ..
-rm -rf .bundle
-echo "DONE"
+	var p = path.split('/').trim();
+
+	if (!p[0] || (p.length === 1 && p[0] === 'plugins'))
+		return true;
+
+	var allowed = ['controllers', 'definitions', 'modules', 'public', 'resources', 'schemas', 'views'];
+
+	for (var m of allowed) {
+		if (path.indexOf(m) === 1)
+			return true;
+	}
+
+	return false;
+});

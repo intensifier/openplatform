@@ -1,2 +1,2 @@
-// PostgreSQL database:
-database                 : postgresql://user:password@localhost:5432/database
+// database              : postgresql://user:pass@localhost:5432/database
+database    (env)     : DATABASE

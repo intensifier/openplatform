@@ -1,24 +1,51 @@
-# OpenPlatform v4.8
+# OpenPlatform v5
 
 - [Documentation](https://docs.totaljs.com/openplatform/)
 - [Join Total.js Telegram](https://t.me/totaljs)
 - [Support](https://www.totaljs.com/support/)
 
-OpenPlatform is a simple enterprise-ready platform for running, integrating and managing multiple web applications. __We recommend to use [bundled version](https://github.com/totaljs/openplatform-bundle)__.
+OpenPlatform is a simple enterprise-ready platform for running, integrating and managing multiple web applications.
 
-## Install instructions
+![OpenPlatform](https://docs.totaljs.com/download/xav3001kb41d-1si7hid-640x492-1.gif)
 
-- download `openplatform`
-- perform `npm install`
-- create a database
-- execute `database.sql`
-- update database connection string in the `/config` file
-- run it `$ node index.js`
-- default login is `admin` default password is `admin`
+## Installation
 
-## Requirements
+WARNING: Please do not execute `database.sql`, this script will use OpenPlatform internally.
 
-- Total.js `+v4`
-- PostgreSQL `+v10`
-- DBMS module - lastest version
-- PostgreSQL module - latest version
+__Manual installation__:
+
+- Install latest version of [__Node.js platform__](https://nodejs.org/en/)
+- Install PostgreSQL
+- [Download __Source-Code__](https://github.com/totaljs/openplatform)
+- Create a database for the OpenPlatform
+- Install NPM dependencies via terminal `$ npm install` in the root of application
+- Update connection strings in `/config` file
+- Run it `$ node index.js`
+- Open `http://127.0.0.1:8000` in your web browser
+- __IMPORTANT__: Then open settings and configure the platform
+
+__Docker Hub__:
+
+```bash
+docker pull totalplatform/openplatform
+docker run --env DATABASE='postgresql://user:pass@hostname/database' -p 8000:8000 totalplatform/openplatform
+````
+
+__Docker Compose__:
+
+```bash
+git clone https://github.com/totaljs/openplatform.git
+cd openplatform
+docker compose up
+````
+
+## Default credentials
+
+```html
+login : info@totaljs.com
+password : admin
+```
+
+## Good to know
+
+__Don't forget:__ every added third-party app must be assigned to a group.
